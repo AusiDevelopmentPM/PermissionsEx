@@ -10,7 +10,7 @@ namespace ADPM\PermissionsEx\models;
 
 class User {
 
-    public function __construct(public string $name, public string $group)
+    public function __construct(public string $name, public array $groups = ["default"], public array $timedPermissions = [])
     {
 
     }

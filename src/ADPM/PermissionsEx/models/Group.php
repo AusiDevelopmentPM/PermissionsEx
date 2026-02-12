@@ -11,7 +11,7 @@ namespace ADPM\PermissionsEx\models;
 class Group
 {
 
-    public function __construct(public string $name, public array $permissions = [], public array $inherit = [])
+    public function __construct(public string $name, public array $permissions = [], public array $inherit = [], public int $weight = 0, public string $prefix = "", public string $suffix = "")
     {
 
     }
