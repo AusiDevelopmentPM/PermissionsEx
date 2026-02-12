@@ -5,6 +5,4 @@ branches:
 projects:
   PermissionsEx:
     path: ""
-  vendor.pocketmine.pocketmine-mp.tests.plugins.TesterPlugin:
-    path: vendor/pocketmine/pocketmine-mp/tests/plugins/TesterPlugin/
 ...
