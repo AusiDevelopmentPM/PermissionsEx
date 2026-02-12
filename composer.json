@@ -1,6 +1,19 @@
 {
+  "name": "adpm/permissionsex",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "EyNoah1171",
+      "email": "eynoah1171@gmx.net"
+    }
+  ],
   "require": {
     "php": "8.3",
     "pocketmine/pocketmine-mp": "5.39.3"
+  },
+  "require-dev": {
+    "phpstan/phpstan": ">=2.1.39"
   }
 }
