@@ -1,0 +1,10 @@
+name: PEX
+version: 1.0.0
+api: 5.0.0
+
+main: ADPM\PermissionsEx\PEX
+
+
+permissions:
+  pex.admin:
+    default: op

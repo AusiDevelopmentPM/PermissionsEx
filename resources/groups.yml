@@ -1,0 +1,10 @@
+default:
+  permissions:
+    pocketmine.command.help: true
+  inherit: []
+
+admin:
+  permissions:
+    "*": true
+  inherit:
+    - default
