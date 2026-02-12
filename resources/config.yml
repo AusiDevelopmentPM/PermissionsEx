@@ -1,0 +1,11 @@
+storage:
+  type: mysql # mysql or yaml
+
+mysql:
+  host: 127.0.0.1
+  user: root
+  password: password
+  database: pex
+  port: 3306
+
+default-group: default

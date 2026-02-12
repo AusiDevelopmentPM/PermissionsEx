@@ -8,7 +8,30 @@
 
 namespace ADPM\PermissionsEx\event;
 
-class GroupChangeEvent
+use pocketmine\event\Event;
+use pocketmine\player\Player;
+
+class GroupChangeEvent extends Event
 {
+
+    public function __construct(private Player $player, private array $oldGroups, private array $newGroups)
+    {
+
+    }
+
+    public function getPlayer(): Player
+    {
+        return $this->player;
+    }
+
+    public function getOldGroups(): array
+    {
+        return $this->oldGroups;
+    }
+
+    public function getNewGroups(): array
+    {
+        return $this->newGroups;
+    }
 
 }

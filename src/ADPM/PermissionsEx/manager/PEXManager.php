@@ -8,6 +8,7 @@
 
 namespace ADPM\PermissionsEx\manager;
 
+use ADPM\PermissionsEx\event\GroupChangeEvent;
 use ADPM\PermissionsEx\models\Group;
 use ADPM\PermissionsEx\PEX;
 use pocketmine\player\Player;
@@ -16,68 +17,84 @@ use pocketmine\utils\Config;
 class PEXManager
 {
 
-    private Config $groups;
-    private Config $users;
-    private PEX $plugin;
+    private array $attachments = [];
 
-    /** @var Group[] */
-    private array $groupCache = [];
-
-    public function __construct(PEX $plugin)
+    public function __construct(
+        private PEX $plugin,
+        private GroupManager $groupManager,
+        private UserManager $userManager,
+    )
     {
-        $this->plugin = $plugin;
-        $this->groups = new Config($plugin->getDataFolder() . "groups.yml", Config::YAML);
-        $this->users = new Config($plugin->getDataFolder() . "users.yml", Config::YAML);
 
-        $this->loadGroups();
     }
 
-    private function loadGroups(): void
+    public function apply(Player $player): void
     {
-        foreach ($this->groups->getAll() as $name => $data) {
-            $this->groupCache[$name] = new Group(
-                $name,
-                $data["permissions"] ?? [],
-                $data["inherit"] ?? []
-            );
+        $name = strtolower($player->getName());
+
+        if (isset($this->attachments[$name])) {
+            $player->removeAttachment($this->attachments[$name]);
         }
-    }
 
-    public function getUserGroup(string $player): string
-    {
-        return $this->users->get(strtolower($player), "default");
-    }
-
-    /**
-     * @throws \JsonException
-     */
-    public function setUserGroup(string $player, string $group): void
-    {
-        $this->users->set(strtolower($player), $group);
-        $this->users->save();
-    }
-
-    public function applyPermissions(Player $player): void
-    {
-        $groupName = $this->getUserGroup($player->getName());
         $attachment = $player->addAttachment($this->plugin);
+        $this->attachments[$name] = $attachment;
 
-        $this->applyGroup($groupName, $attachment);
+        $user = $this->userManager->get($name);
+        $groups = $this->groupManager->getSorted($user->groups);
+
+        foreach ($groups as $group) {
+            foreach ($group->permissions as $perm => $value) {
+                $attachment->setPermission($perm, $value);
+            }
+        }
+
+        foreach ($user->timedPermissions as $perm => $expire) {
+            if (time() < $expire) {
+                $attachment->setPermission($perm, true);
+            }
+        }
+
+        $player->setNameTag(
+            PEX::getInstance()->getPexAPI()->getPrefix($player) .
+            $player->getName() . PEX::getInstance()->getPexAPI()->getSuffix($player)
+        );
+
+        $player->recalculatePermissions();
     }
 
-    private function applyGroup(string $groupName, $attachment): void
+    public function removeAttachment(Player $player): void
     {
-        if (!isset($this->groupCache[$groupName])) return;
-
-        $group = $this->groupCache[$groupName];
-
-        foreach ($group->permissions as $perm => $value) {
-            $attachment->setPermission($perm, $value);
+        $name = strtolower($player->getName());
+        if (isset($this->attachments[$name])) {
+            $player->removeAttachment($this->attachments[$name]);
+            unset($this->attachments[$name]);
         }
+    }
 
-        foreach ($group->inherit as $parent) {
-            $this->applyGroup($parent, $attachment);
+    public function cleanupExpired(): void
+    {
+        foreach ($this->userManager->load() as $user) {}
+    }
+
+    public function reload(): void
+    {
+        $this->groupManager->load();
+        $this->userManager->load();
+
+        foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
+            $this->apply($player);
         }
+    }
+
+    public function callGroupChangeEvent(Player $player, array $old, array $new): void
+    {
+        $event = new GroupChangeEvent($player, $old, $new);
+        $event->call();
+    }
+
+    public function getPlugin(): PEX
+    {
+        return $this->plugin;
     }
 
 }

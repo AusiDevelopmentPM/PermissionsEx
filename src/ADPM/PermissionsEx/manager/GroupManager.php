@@ -57,4 +57,9 @@ class GroupManager
         return $groups;
     }
 
+    public function exists(string $name): bool
+    {
+        return isset($this->groups[strtolower($name)]);
+    }
+
 }

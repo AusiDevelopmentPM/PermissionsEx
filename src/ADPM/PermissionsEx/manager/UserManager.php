@@ -9,6 +9,7 @@
 namespace ADPM\PermissionsEx\manager;
 
 use ADPM\PermissionsEx\models\User;
+use ADPM\PermissionsEx\PEX;
 use pocketmine\utils\Config;
 
 class UserManager

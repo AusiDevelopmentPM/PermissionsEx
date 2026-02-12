@@ -1,10 +1,25 @@
 default:
+  weight: 1
+  prefix: "§7[Spieler] "
+  suffix: ""
   permissions:
     pocketmine.command.help: true
   inherit: []
 
+vip:
+  weight: 50
+  prefix: "§a[VIP] "
+  suffix: ""
+  permissions:
+    example.fly: true
+  inherit:
+    - default
+
 admin:
+  weight: 100
+  prefix: "§c[Admin] "
+  suffix: " §4★"
   permissions:
     "*": true
   inherit:
-    - default
+    - vip

@@ -32,13 +32,14 @@ class PEX extends PluginBase {
         self::$instance = $this;
         $this->initPerms();
         @mkdir($this->getDataFolder());
+        $this->saveDefaultConfig();
         $this->saveResource("groups.yml");
         $this->saveResource("users.yml");
-        $this->PEXManager = new PEXManager($this);
-        $this->groupManager = new GroupManager();
-        $this->userManager = new UserManager();
+        $this->groupManager = new GroupManager($this);
+        $this->userManager = new UserManager($this);
+        $this->PEXManager = new PEXManager($this, $this->groupManager, $this->userManager);
 
-        self::$api = new PexAPI();
+        self::$api = new PexAPI($this->PEXManager, $this->groupManager, $this->userManager);
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         $this->getServer()->getCommandMap()->register("pex", new PEXCommand($this));

@@ -8,7 +8,22 @@
 
 namespace ADPM\PermissionsEx\tasks;
 
-class ExpirePermissionTask
+use ADPM\PermissionsEx\api\PexAPI;
+use ADPM\PermissionsEx\manager\PEXManager;
+use pocketmine\permission\PermissionManager;
+use pocketmine\scheduler\Task;
+
+class ExpirePermissionTask extends Task
 {
+
+    public function __construct(private PEXManager $manager)
+    {
+
+    }
+
+    public function onRun(): void
+    {
+        $this->manager->cleanupExpired();
+    }
 
 }
