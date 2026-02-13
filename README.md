@@ -91,11 +91,17 @@ admin:
 ## 📚 API Usage
 
 ```php
-use PEX\API\PermissionAPI;
+use ADPM\PermissionsEx\PEX;
 
-$api = PermissionAPI::getInstance();
+$api = PEX::getInstance()->getPexAPI();
 
-$api->addPermission($player, "example.permission");
+/* add a Timed Permission */
+$api->addTimedPermission($player, "example.permission", 30);
+
+/* get the Group of a Player */
+$api->getGroup($player);
+
+/* get the Group from $player */
 $group = $api->getPlayerGroup($player);
 ```
 

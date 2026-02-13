@@ -8,3 +8,11 @@ main: ADPM\PermissionsEx\PEX
 permissions:
   pex.admin:
     default: op
+
+  pex.command.user:
+    default: op
+  pex.command.group:
+    default: op
+
+  pex.command.reload:
+    default: op

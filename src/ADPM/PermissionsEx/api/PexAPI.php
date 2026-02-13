@@ -15,9 +15,16 @@ use ADPM\PermissionsEx\models\Group;
 use ADPM\PermissionsEx\PEX;
 use pocketmine\permission\PermissionManager;
 use pocketmine\player\Player;
+use pocketmine\utils\Config;
+use pocketmine\utils\SingletonTrait;
 
 class PexAPI
 {
+
+    use SingletonTrait;
+
+    private Config $groups;
+    private Config $users;
 
     public function __construct(
         private PEXManager $manager,
@@ -25,7 +32,8 @@ class PexAPI
         private UserManager $userManager
     )
     {
-
+        self::setInstance($this);
+        @mkdir("");
     }
 
     public function setGroup(Player|string $player, string $group): bool
@@ -50,6 +58,12 @@ class PexAPI
         }
 
         return true;
+    }
+
+
+    public function getGroup(Player|string $player): Group
+    {
+        return $this->groupManager->get($player);
     }
 
     public function addGroup(Player|string $player, string $group): bool

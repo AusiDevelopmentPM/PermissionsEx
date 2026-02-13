@@ -54,6 +54,11 @@ class PEX extends PluginBase {
 ");
     }
 
+    public static function prefix(): string
+    {
+        return "§8[§3§lPEX§r§8] §r§7";
+    }
+
     private function initPerms(): void
     {
         $perm = new Permission("pex.admin");
