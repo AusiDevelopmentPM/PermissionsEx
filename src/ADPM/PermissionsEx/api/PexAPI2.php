@@ -8,6 +8,7 @@
 
 namespace ADPM\PermissionsEx\api;
 
+use ADPM\PermissionsEx\PEX;
 use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
 
@@ -18,10 +19,9 @@ class PexAPI2 {
     private Config $groups;
     private Config $users;
 
-    public function __construct(string $dataFolder)
-    {
-        self::setInstance($this);
 
+    public function init(string $dataFolder): void
+    {
         @mkdir($dataFolder);
 
         $this->groups = new Config($dataFolder . "groups.yml", Config::YAML);
@@ -32,16 +32,18 @@ class PexAPI2 {
     {
         $this->groups->reload();
         $this->users->reload();
+        PEX::getInstance()->getLogger()->warning(PEX::prefix() . "PEX has been reloaded!");
     }
 
     public function createGroup(string $groupName): void
     {
         if (!$this->groups->exists($groupName)) {
             $this->groups->set($groupName, [
+                "weight" => rand(1, 100),
                 "permissions" => [],
-                "prefix" => "",
+                "prefix" => "§8[§f" . $groupName . "§8] §r",
                 "suffix" => "",
-                "inheritance" => []
+                "inherit" => []
             ]);
 
             $this->groups->save();
@@ -88,4 +90,35 @@ class PexAPI2 {
         $this->users->set($player, $data);
         $this->users->save();
     }
+
+    public function setGroup(string $name, string $group): void
+    {
+        if (!$this->groups->exists($group)) return;
+
+        $data = $this->users->get($name, []);
+        $data["groups"] = [$group];
+
+        $this->users->set($name, $data);
+        $this->users->save();
+    }
+
+    public function addGroup(string $player, string $group): void
+    {
+        if (!$this->groups->exists($group)) return;
+
+        $data = $this->users->get($player, []);
+
+        if (!isset($data["groups"])) {
+            $data["groups"] = [];
+        }
+
+        if (!in_array($group, $data["groups"], true)) {
+            $data["groups"][] = $group;
+        }
+
+        $this->users->set($player, $data);
+        $this->users->save();
+
+    }
+
 }

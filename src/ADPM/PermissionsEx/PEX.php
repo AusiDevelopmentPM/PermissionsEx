@@ -9,6 +9,7 @@
 namespace ADPM\PermissionsEx;
 
 use ADPM\PermissionsEx\api\PexAPI;
+use ADPM\PermissionsEx\api\PexAPI2;
 use ADPM\PermissionsEx\commands\PEXCommand;
 use ADPM\PermissionsEx\manager\GroupManager;
 use ADPM\PermissionsEx\manager\PEXManager;
@@ -38,6 +39,7 @@ class PEX extends PluginBase {
         $this->groupManager = new GroupManager($this);
         $this->userManager = new UserManager($this);
         $this->PEXManager = new PEXManager($this, $this->groupManager, $this->userManager);
+        PexAPI2::getInstance()->init($this->getDataFolder());
 
         self::$api = new PexAPI($this->PEXManager, $this->groupManager, $this->userManager);
 

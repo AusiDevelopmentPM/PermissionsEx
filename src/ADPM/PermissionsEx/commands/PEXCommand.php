@@ -45,7 +45,7 @@ class PEXCommand extends Command
 
             case "reload":
                 if ($sender->hasPermission("pex.command.reload")) {
-                    $this->plugin->getPermManager()->reload();
+                    $api2->reload();
                     $sender->sendMessage(PEX::prefix() . "§aPEX has been reloaded.");
                 } else {
                     $sender->sendMessage(Data::NoPermissionMessage());
@@ -75,6 +75,11 @@ class PEXCommand extends Command
                     case "remove":
                         $api2->removePermissionFromUser($name, $permission);
                         $sender->sendMessage("§aPermission removed.");
+                        break;
+
+                    case "group":
+                        $api2->setGroup($args[1], $args[2]);
+                        $sender->sendMessage($args[1] . " §ahas been set to " . $args[2]);
                         break;
 
                     default:
@@ -145,8 +150,8 @@ class PEXCommand extends Command
     private function sendHelpMessage(CommandSender $sender): void
     {
         $sender->sendMessage(PEX::prefix() . "§e/pex setgroup <player> <group>");
-        $sender->sendMessage(PEX::prefix() . "§e/pex addgroup <player> <group>");
-        $sender->sendMessage(PEX::prefix() . "§e/pex delgroup <player> <group>");
+        $sender->sendMessage(PEX::prefix() . "§e/pex user <name> <setgroup>");
+        $sender->sendMessage(PEX::prefix() . "§e/pex group <name> <create|delete|addperm|removeperm>");
         $sender->sendMessage(PEX::prefix() . "§e/pex reload");
     }
 

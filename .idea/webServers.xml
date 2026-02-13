@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="b3087b0a-fa38-4212-ab35-251e7b1a7fa1" name="TV VM">
+        <fileTransfer rootFolder="/home/mcpe/developer/plugins/PEX" accessType="SFTP" host="65.108.8.88" port="22" sshConfigId="14085951-8b24-4654-848d-a451075ff00d" sshConfig="root@65.108.8.88:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
